@@ -141,15 +141,8 @@ async def controlDevice(hass, action, payload):
                 if domain == 'media_player':
                     # 设置音量
                     if volume is not None:
-                        if volume == -1:
-                            # 声音小
-                            service_name = 'volume_down'
-                        elif volume == 1:
-                            # 声音大
-                            service_name = 'volume_up'
-                        else:
-                            service_name = 'volume_set'
-                            service_data.update({'volume_level': volume / 100})
+                        service_name = 'volume_set'
+                        service_data.update({'volume_level': volume / 100})
                     # 静音
                     if muteMode is not None:
                         service_name = 'volume_mute'
@@ -169,7 +162,16 @@ async def controlDevice(hass, action, payload):
                 if brightness is not None:
                     service_name = 'turn_on'
                     service_data.update({'brightness_pct': int(attributes.get('brightness', 255) / 255 * 100) + brightness})
-
+                # 媒体播放器
+                if domain == 'media_player':
+                    # 设置音量
+                    if volume is not None:
+                        if volume == -1:
+                            # 声音小
+                            service_name = 'volume_down'
+                        elif volume == 1:
+                            # 声音大
+                            service_name = 'volume_up'
             if service_name is not None:
                 # 脚本执行
                 if domain == 'script':
